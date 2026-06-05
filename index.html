@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Benimle Barışır mısın? 🥺</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Lato:wght@300;400&display=swap" rel="stylesheet">
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: 'Lato', sans-serif;
+    background: #0d0a0f;
+    color: #f5e6e8;
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+  }
+  .hearts-bg {
+    position: fixed;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    pointer-events: none;
+    z-index: 0;
+    overflow: hidden;
+  }
+  .heart-particle {
+    position: absolute;
+    animation: floatUp linear infinite;
+    opacity: 0;
+  }
+  @keyframes floatUp {
+    0%   { transform: translateY(110vh) rotate(0deg); opacity: 0; }
+    10%  { opacity: 0.5; }
+    90%  { opacity: 0.2; }
+    100% { transform: translateY(-10vh) rotate(360deg); opacity: 0; }
+  }
+
+  .card {
+    position: relative;
+    z-index: 1;
+    background: rgba(232,160,180,0.07);
+    border: 1px solid rgba(232,160,180,0.25);
+    border-radius: 20px;
+    padding: 56px 48px;
+    max-width: 480px;
+    width: 90%;
+    text-align: center;
+    box-shadow: 0 0 60px rgba(232,160,180,0.08);
+  }
+
+  .emoji { font-size: 64px; margin-bottom: 24px; display: block; animation: pulse 2s ease-in-out infinite; }
+  @keyframes pulse { 0%,100%{transform:scale(1)}50%{transform:scale(1.1)} }
+
+  .question {
+    font-family: 'Playfair Display', serif;
+    font-style: italic;
+    font-size: clamp(22px, 5vw, 32px);
+    color: #f5e6e8;
+    line-height: 1.4;
+    margin-bottom: 12px;
+  }
+  .sub {
+    font-size: 13px;
+    color: #c9a8b4;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    margin-bottom: 44px;
+  }
+
+  .btns {
+    display: flex;
+    gap: 16px;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+    height: 56px;
+  }
+
+  .btn-evet {
+    padding: 14px 40px;
+    background: #e8a0b4;
+    color: #0d0a0f;
+    border: none;
+    border-radius: 4px;
+    font-family: 'Lato', sans-serif;
+    font-size: 15px;
+    font-weight: 700;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: transform 0.2s, box-shadow 0.2s;
+    z-index: 2;
+  }
+  .btn-evet:hover { transform: scale(1.05); box-shadow: 0 0 24px rgba(232,160,180,0.4); }
+
+  .btn-hayir {
+    padding: 14px 40px;
+    background: transparent;
+    color: #e8a0b4;
+    border: 1px solid #e8a0b4;
+    border-radius: 4px;
+    font-family: 'Lato', sans-serif;
+    font-size: 15px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: all 0.15s;
+    position: absolute;
+    right: 0;
+  }
+
+  .success { display: none; }
+  .success.show { display: block; animation: fadeIn 0.6s ease; }
+  @keyframes fadeIn { from{opacity:0;transform:translateY(16px)} to{opacity:1;transform:translateY(0)} }
+
+  .success-emoji { font-size: 72px; display: block; margin-bottom: 20px; }
+  .success-title {
+    font-family: 'Playfair Display', serif;
+    font-style: italic;
+    font-size: clamp(24px, 5vw, 36px);
+    color: #f5e6e8;
+    margin-bottom: 12px;
+  }
+  .success-sub { font-size: 15px; color: #c9a8b4; line-height: 1.7; }
+</style>
+</head>
+<body>
+
+<div class="hearts-bg" id="heartsBg"></div>
+
+<div class="card" id="mainCard">
+  <div id="question-view">
+    <span class="emoji">🥺</span>
+    <p class="question">Benimle barışır mısın?</p>
+    <p class="sub">Lütfen...</p>
+    <div class="btns" id="btnsWrap">
+      <button class="btn-evet" onclick="baris()">Evet 🩷</button>
+      <button class="btn-hayir" id="hayirBtn">Hayır</button>
+    </div>
+  </div>
+  <div class="success" id="successView">
+    <span class="success-emoji">🥳</span>
+    <p class="success-title">Yeyyy! Barıştık!</p>
+    <p class="success-sub">Seni çok seviyorum,<br>kızgın halin bile güzeldi ama<br>gülüşünü çok özledim. 🩷</p>
+  </div>
+</div>
+
+<script>
+  const bg = document.getElementById('heartsBg');
+  const emojis = ['🩷','💗','💕','✨','💫','🌸'];
+  for (let i = 0; i < 18; i++) {
+    const h = document.createElement('div');
+    h.className = 'heart-particle';
+    h.textContent = emojis[Math.floor(Math.random() * emojis.length)];
+    h.style.cssText = `left:${Math.random()*100}%;font-size:${10+Math.random()*16}px;animation-duration:${8+Math.random()*12}s;animation-delay:${Math.random()*10}s;`;
+    bg.appendChild(h);
+  }
+
+  const hayir = document.getElementById('hayirBtn');
+  let escapeCount = 0;
+
+  function escape() {
+    escapeCount++;
+    const cardRect = document.getElementById('mainCard').getBoundingClientRect();
+    const hRect = hayir.getBoundingClientRect();
+
+    hayir.style.position = 'fixed';
+    hayir.style.transition = 'all 0.2s ease';
+
+    let newLeft = hRect.left + (Math.random() * 300 - 150);
+    let newTop  = hRect.top  + (Math.random() * 300 - 150);
+
+    newLeft = Math.max(8, Math.min(window.innerWidth - 150, newLeft));
+    newTop  = Math.max(8, Math.min(window.innerHeight - 60, newTop));
+
+    hayir.style.left = newLeft + 'px';
+    hayir.style.top  = newTop  + 'px';
+
+    if (escapeCount >= 3) {
+      const scale = Math.max(0.4, 1 - (escapeCount - 3) * 0.12);
+      hayir.style.transform = `scale(${scale})`;
+      hayir.style.opacity = Math.max(0.15, 1 - (escapeCount - 3) * 0.15);
+      hayir.style.fontSize = '11px';
+    }
+  }
+
+  hayir.addEventListener('mouseover', escape);
+  hayir.addEventListener('touchstart', (e) => { e.preventDefault(); escape(); });
+
+  function baris() {
+    document.getElementById('question-view').style.display = 'none';
+    hayir.style.display = 'none';
+    const s = document.getElementById('successView');
+    s.classList.add('show');
+
+    for (let i = 0; i < 16; i++) {
+      const h = document.createElement('div');
+      h.style.cssText = `position:fixed;font-size:${16+Math.random()*28}px;left:${10+Math.random()*80}%;top:${10+Math.random()*70}%;pointer-events:none;z-index:999;animation:floatUp ${1.5+Math.random()}s linear forwards;opacity:0;`;
+      h.textContent = emojis[Math.floor(Math.random()*emojis.length)];
+      document.body.appendChild(h);
+      setTimeout(()=>h.remove(), 3000);
+    }
+  }
+</script>
+</body>
+</html>
